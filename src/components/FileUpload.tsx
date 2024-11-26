@@ -1,6 +1,7 @@
 import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {mapCsvToJson} from "../utils/datareader/csv-mapper";
 import {mapDataToWorkout} from "../utils/mapper/workoutMapper";
+import {WorkoutData} from "../utils/entities/WorkoutData";
 
 interface FileUploadProps {
     setIsUploaded: () => void;
@@ -18,8 +19,8 @@ export function FileUpload({setIsUploaded}: FileUploadProps) {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (file) {
-            let json = await mapCsvToJson(file)
-            mapDataToWorkout(json)
+            let workoutData: WorkoutData[] = await mapCsvToJson(file)
+            mapDataToWorkout(workoutData)
         }
         setIsUploaded()
     };

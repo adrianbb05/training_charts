@@ -1,6 +1,5 @@
 import {Workout} from "../entities/Workout";
 import {createExercise, createExerciseEntry} from "./exerciseMapper";
-import {Exercise} from "../entities/Exercise";
 
 let workouts: Workout[] = []
 
@@ -16,16 +15,26 @@ export function addInformationToExistentWorkout(workoutEntry: any, actualWorkout
         }
     }
 
+    const exercise = {
+        title: actualExercise.title,
+        note: actualExercise.note,
+        description: actualExercise.description,
+        sets: [actualExercise.set]
+    }
     if (!exerciseFound) {
-        actualWorkout.exercises.push(new Exercise(actualExercise.title, actualExercise.note, actualExercise.description, [actualExercise.set]));
+        actualWorkout.exercises.push(exercise);
     }
 }
 
 export function addNewWorkout(workoutEntry: any, workoutId: string, times: string[]) {
     let actualExercise = createExercise(workoutEntry)
     let workoutTitle: string = workoutEntry.title
-    let workout = new Workout(workoutId, workoutTitle, times, [actualExercise])
-
+    let workout: Workout = {
+        id: workoutId,
+        title: workoutTitle,
+        times: times,
+        exercises: [actualExercise]
+    }
     workouts.push(workout)
 }
 
