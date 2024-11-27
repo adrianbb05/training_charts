@@ -8,8 +8,8 @@ interface ExerciseHomePageProps {
 export function ExerciseHomePage({exercise}: ExerciseHomePageProps) {
     const [chartType, setChartType] = useState(ExerciseChartType.MAX_WEIGHT)
     return (
-        <div>
-            <h1 className={"items-center"}>{exercise}</h1>
+        <div className={"grid grid-cols-1 gap-4"}>
+            <h1 className={"text-center"}>{exercise}</h1>
             <div className={"grid grid-cols-4"}>
                 <button onClick={() => setChartType(ExerciseChartType.MAX_WEIGHT.valueOf())}>
                     Max Weight
