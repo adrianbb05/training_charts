@@ -4,6 +4,9 @@ import {Card, CardContent, CardFooter, CardHeader, CardTitle,} from "../ui/card"
 import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent,} from "../ui/chart"
 import {Exercise} from "../../utils/entities/Exercise";
 import {getWorkouts} from "../../utils/mapper/workoutHelper";
+import {Workout} from "../../utils/entities/Workout";
+import {Set} from "../../utils/entities/Set"
+import {ChartElement, setChartElement} from "../../utils/chartCreationUtils";
 
 export enum ExerciseChartType {
     MAX_WEIGHT,
@@ -18,100 +21,35 @@ interface ExerciseChartProps {
 }
 
 export function ExerciseChart({exerciseToDisplay, chartType}: ExerciseChartProps) {
-    // TODO: change chart variables
-    let workouts = getWorkouts()
-    let exercises: Exercise[] = []
-
+    let workouts: Workout[] = getWorkouts()
+    let exerciseWorkoutMap: Map<Workout, Exercise> = new Map()
     for (let i = workouts.length - 1; i >= 0; i--) {
         let workout = workouts[i]
         for (let exercise of workout.exercises) {
             if (exercise.title === exerciseToDisplay) {
-                exercises.push(exercise)
+                exerciseWorkoutMap.set(workout, exercise)
             }
         }
     }
+    let chartData: ChartElement[] = []
 
-    let chartData: any[] = []
-    let title: string = ""
-    switch (chartType) {
-        case ExerciseChartType.MAX_WEIGHT: {
-            title = `Max weight`
-            exercises.forEach(exercise => {
-                let sets = exercise.sets;
-                let maxWeight = 0
-                for (let set of sets) {
-                    if (set.weight > maxWeight) {
-                        maxWeight = set.weight
-                    }
-                }
-                chartData.push({
-                    month: "",
-                    exercise: maxWeight
-                })
-            })
-            break
-        }
-        case ExerciseChartType.SET_VOLUME: {
-            title = "Volume"
-            exercises.forEach(exercise => {
-                let sets = exercise.sets
-                let maxVolume = 0
-                for (let set of sets) {
-                    let setVolume = set.weight * set.reps
-                    if (setVolume > maxVolume) {
-                        maxVolume = setVolume
-                    }
-                }
-                chartData.push({
-                    month: "",
-                    exercise: maxVolume
-                })
-            })
-            break
-        }
-        case ExerciseChartType.SESSION_VOLUME: {
-            title = "Session Volume"
-            exercises.forEach(exercise => {
-                let sets = exercise.sets;
-                let sessionVolume = 0
-                for (let set of sets) {
-                    let setVolume = set.weight * set.reps;
-                    sessionVolume += setVolume
-                }
-                chartData.push({
-                    month: "",
-                    exercise: sessionVolume
-                })
-            })
-            break
-        }
-        case ExerciseChartType.TOTAL_REPS: {
-            title = "Total reps"
-            exercises.forEach(exercise => {
-                let sets = exercise.sets;
-                let sessionReps = 0
-                for (let set of sets) {
-                    sessionReps += set.reps
-                }
-                chartData.push({
-                    month: "",
-                    exercise: sessionReps
+    let chartTitle: string = ""
 
-                })
-            })
-            break
-        }
-    }
+    exerciseWorkoutMap.forEach((exercise, workout) => {
+        let sets: Set[] = exercise.sets
+        let chartElement = setChartElement(chartType, chartTitle, sets, chartConfig, workout);
+        chartData.push(chartElement)
+    })
+
     return (
-        <Chart chartData={chartData} title={title}/>
+        <Chart chartData={chartData} title={chartTitle}/>
     )
-
 }
 
 const chartConfig = {
     exercise: {
         label: "Exercise",
-        color: "hsl(var(--chart-1))",
+        color: "blue",
     },
 } satisfies ChartConfig
 
@@ -138,9 +76,10 @@ function Chart({title, chartData}: ChartProps) {
                     >
                         <CartesianGrid vertical={false}/>
                         <XAxis
-                            dataKey="month"
+                            dataKey="workout"
                             tickLine={false}
                             axisLine={false}
+                            // Change width
                             tickMargin={8}
                             tickFormatter={(value) => value.slice(0, 3)}
                         />

@@ -29,6 +29,6 @@ export function createExercise(workoutEntry: any): Exercise {
         title: workoutEntry.exercise_title,
         note: workoutEntry.exercise_note,
         description: workoutEntry.description,
-        sets: [createSet(workoutEntry)],
+        sets: [createSet(workoutEntry)]
     }
 }
