@@ -7,6 +7,7 @@ import {getWorkouts} from "../../utils/mapper/workoutHelper";
 import {Workout} from "../../utils/entities/Workout";
 import {Set} from "../../utils/entities/Set"
 import {ChartElement, setChartElement, setChartTitleName} from "../../utils/chartCreationUtils";
+import {workoutsToMap} from "../../utils/mapper/workoutMapper";
 
 export enum ExerciseChartType {
     MAX_WEIGHT,
@@ -22,18 +23,10 @@ interface ExerciseChartProps {
 
 export function ExerciseChart({exerciseToDisplay, chartType}: ExerciseChartProps) {
     let workouts: Workout[] = getWorkouts()
-    let exerciseWorkoutMap: Map<Workout, Exercise> = new Map()
-    for (let i = workouts.length - 1; i >= 0; i--) {
-        let workout = workouts[i]
-        for (let exercise of workout.exercises) {
-            if (exercise.title === exerciseToDisplay) {
-                exerciseWorkoutMap.set(workout, exercise)
-            }
-        }
-    }
+    let workoutExerciseMap: Map<Workout, Exercise> = workoutsToMap(workouts, exerciseToDisplay)
     let chartData: ChartElement[] = []
     let chartTitle: string = setChartTitleName(chartType)
-    exerciseWorkoutMap.forEach((exercise, workout) => {
+    workoutExerciseMap.forEach((exercise, workout) => {
         let sets: Set[] = exercise.sets
         let chartElement: ChartElement = setChartElement(chartType, sets, chartConfig, workout);
         chartData.push(chartElement)
