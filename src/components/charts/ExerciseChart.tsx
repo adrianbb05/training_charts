@@ -1,12 +1,12 @@
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts"
 
-import {Card, CardContent, CardFooter, CardHeader, CardTitle,} from "../ui/card"
+import {Card, CardContent, CardHeader, CardTitle,} from "../ui/card"
 import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent,} from "../ui/chart"
 import {Exercise} from "../../utils/entities/Exercise";
 import {getWorkouts} from "../../utils/mapper/workoutHelper";
 import {Workout} from "../../utils/entities/Workout";
 import {Set} from "../../utils/entities/Set"
-import {ChartElement, setChartElement} from "../../utils/chartCreationUtils";
+import {ChartElement, setChartElement, setChartTitleName} from "../../utils/chartCreationUtils";
 
 export enum ExerciseChartType {
     MAX_WEIGHT,
@@ -32,15 +32,12 @@ export function ExerciseChart({exerciseToDisplay, chartType}: ExerciseChartProps
         }
     }
     let chartData: ChartElement[] = []
-
-    let chartTitle: string = ""
-
+    let chartTitle: string = setChartTitleName(chartType)
     exerciseWorkoutMap.forEach((exercise, workout) => {
         let sets: Set[] = exercise.sets
-        let chartElement = setChartElement(chartType, chartTitle, sets, chartConfig, workout);
+        let chartElement: ChartElement = setChartElement(chartType, sets, chartConfig, workout);
         chartData.push(chartElement)
     })
-
     return (
         <Chart chartData={chartData} title={chartTitle}/>
     )
@@ -72,16 +69,16 @@ function Chart({title, chartData}: ChartProps) {
                         margin={{
                             left: 12,
                             right: 12,
-                        }}
-                    >
-                        <CartesianGrid vertical={false}/>
+                        }}>
+                        <CartesianGrid vertical={false} strokeDasharray="3 3"/>
                         <XAxis
+                            width={9}
                             dataKey="workout"
                             tickLine={false}
                             axisLine={false}
-                            // Change width
-                            tickMargin={8}
-                            tickFormatter={(value) => value.slice(0, 3)}
+                            fontSize={12}
+                            angle={-70}
+                            tickFormatter={(value: string) => value}
                         />
                         <ChartTooltip
                             cursor={false}
@@ -91,18 +88,12 @@ function Chart({title, chartData}: ChartProps) {
                             dataKey="exercise"
                             type="linear"
                             stroke="var(--color-exercise)"
-                            strokeWidth={2}
+                            strokeWidth={3}
                             dot={false}
                         />
                     </LineChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="flex gap-2 font-medium leading-none">
-                    The Chart has a total of {chartData.length} entries
-                </div>
-            </CardFooter>
-
         </Card>
     )
 }

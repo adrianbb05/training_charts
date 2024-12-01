@@ -8,20 +8,18 @@ export interface ChartElement {
     exercise: number
 }
 
-export function setChartElement(chartType: ExerciseChartType, chartTitle: string, sets: Set[], chartConfig: ChartConfig, workout: Workout): ChartElement {
+export function setChartElement(chartType: ExerciseChartType, sets: Set[], chartConfig: ChartConfig, workout: Workout): ChartElement {
     let variableToShow: number = 0
     chartConfig.exercise.label = "kg"
     sets.forEach(set => {
         switch (chartType) {
             case ExerciseChartType.MAX_WEIGHT: {
-                chartTitle = `Max weight`
                 if (set.weight > variableToShow) {
                     variableToShow = set.weight
                 }
                 break
             }
             case ExerciseChartType.SET_VOLUME: {
-                chartTitle = "Volume"
                 let setVolume = set.weight * set.reps
                 if (setVolume > variableToShow) {
                     variableToShow = setVolume
@@ -29,13 +27,11 @@ export function setChartElement(chartType: ExerciseChartType, chartTitle: string
                 break
             }
             case ExerciseChartType.SESSION_VOLUME: {
-                chartTitle = "Session Volume"
                 let setVolume = set.weight * set.reps;
                 variableToShow += setVolume
                 break
             }
             case ExerciseChartType.TOTAL_REPS: {
-                chartTitle = "Total reps"
                 variableToShow += set.reps
                 chartConfig.exercise.label = "reps"
                 break
@@ -43,12 +39,35 @@ export function setChartElement(chartType: ExerciseChartType, chartTitle: string
         }
     })
     return {
-        workout: dateParser(workout.times[0]),
+        workout: parseDate(workout.times[0]),
         exercise: variableToShow
     }
 }
 
-function dateParser(notParsedDate: string): string {
+export function setChartTitleName(chartType: ExerciseChartType): string {
+    let chartTitle: string = ""
+    switch (chartType) {
+        case ExerciseChartType.MAX_WEIGHT: {
+            chartTitle = `Max weight`
+            break
+        }
+        case ExerciseChartType.SET_VOLUME: {
+            chartTitle = "Volume"
+            break
+        }
+        case ExerciseChartType.SESSION_VOLUME: {
+            chartTitle = "Session Volume"
+            break
+        }
+        case ExerciseChartType.TOTAL_REPS: {
+            chartTitle = "Total reps"
+            break
+        }
+    }
+    return chartTitle;
+}
+
+function parseDate(notParsedDate: string): string {
     let elements: string[] = notParsedDate.split(" ")
     let parsedDate: string = ""
     let day: string = elements[0];
@@ -56,7 +75,7 @@ function dateParser(notParsedDate: string): string {
     let year: string = elements[2].substring(2, 4);
     let monthAsNumber: number = 0
     let separator = "/"
-    switch (month) {
+    switch (month.toLowerCase()) {
         case "jan": {
             monthAsNumber = 1;
             break;
@@ -106,7 +125,5 @@ function dateParser(notParsedDate: string): string {
             break;
         }
     }
-    let parsedData = parsedDate.concat(day, separator, String(monthAsNumber), separator, year);
-    console.log(parsedData);
-    return parsedData;
+    return parsedDate.concat(day, separator, String(monthAsNumber), separator, year);
 }

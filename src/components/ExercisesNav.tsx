@@ -42,7 +42,6 @@ export function ExercisesNav() {
 }
 
 function handleExerciseNames(searchBarInput: string) {
-    console.log(searchBarInput)
     const workouts: Workout[] = getWorkouts()
     let exerciseNames: string[] = []
     let allExercises: string[] = workouts.flatMap(workout => workout.exercises).map(exercise => exercise.title)
