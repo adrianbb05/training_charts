@@ -1,16 +1,17 @@
 import {Set} from "./entities/Set";
 import {ExerciseChartType} from "../components/charts/ExerciseChart";
-import {ChartConfig} from "../components/ui/chart";
+import {ChartConfig} from "../components/ui/chart"
 import {Workout} from "./entities/Workout";
+import {ComparisonChartConfig} from "../components/charts/ExerciseComparisonChart";
 
-export interface ChartElement {
-    workout: string,
+export interface SimpleChartElement {
+    workoutDate: string,
     exercise: number
 }
 
-export function setChartElement(chartType: ExerciseChartType, sets: Set[], chartConfig: ChartConfig, workout: Workout): ChartElement {
+export function setChartElement(chartType: ExerciseChartType, sets: Set[], chartConfig: ChartConfig, workout: Workout): SimpleChartElement {
     let variableToShow: number = 0
-    chartConfig.exercise.label = "kg"
+    handleChartConfig(chartConfig, "kg")
     sets.forEach(set => {
         switch (chartType) {
             case ExerciseChartType.MAX_WEIGHT: {
@@ -33,13 +34,13 @@ export function setChartElement(chartType: ExerciseChartType, sets: Set[], chart
             }
             case ExerciseChartType.TOTAL_REPS: {
                 variableToShow += set.reps
-                chartConfig.exercise.label = "reps"
+                handleChartConfig(chartConfig, "reps")
                 break
             }
         }
     })
     return {
-        workout: parseDate(workout.times[0]),
+        workoutDate: parseDate(workout.times[0]),
         exercise: variableToShow
     }
 }
@@ -65,6 +66,15 @@ export function setChartTitleName(chartType: ExerciseChartType): string {
         }
     }
     return chartTitle;
+}
+
+function handleChartConfig(chartConfig: ChartConfig, valueToSet: string) {
+    if (chartConfig satisfies ComparisonChartConfig) {
+        chartConfig.exercise1.label = valueToSet
+        chartConfig.exercise2.label = valueToSet
+    } else {
+        chartConfig.exercise1.label = valueToSet
+    }
 }
 
 function parseDate(notParsedDate: string): string {
