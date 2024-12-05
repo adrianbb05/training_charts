@@ -6,7 +6,7 @@ import {Exercise} from "../../utils/entities/Exercise";
 import {getWorkouts} from "../../utils/mapper/workoutHelper";
 import {Workout} from "../../utils/entities/Workout";
 import {Set} from "../../utils/entities/Set"
-import {ChartElement, setChartElement, setChartTitleName} from "../../utils/chartCreationUtils";
+import {SimpleChartElement, setChartElement, setChartTitleName} from "../../utils/chartCreationUtils";
 import {workoutsToMap} from "../../utils/mapper/workoutMapper";
 
 export enum ExerciseChartType {
@@ -24,11 +24,11 @@ interface ExerciseChartProps {
 export function ExerciseChart({exerciseToDisplay, chartType}: ExerciseChartProps) {
     let workouts: Workout[] = getWorkouts()
     let workoutExerciseMap: Map<Workout, Exercise> = workoutsToMap(workouts, exerciseToDisplay)
-    let chartData: ChartElement[] = []
+    let chartData: SimpleChartElement[] = []
     let chartTitle: string = setChartTitleName(chartType)
     workoutExerciseMap.forEach((exercise, workout) => {
         let sets: Set[] = exercise.sets
-        let chartElement: ChartElement = setChartElement(chartType, sets, chartConfig, workout);
+        let chartElement: SimpleChartElement = setChartElement(chartType, sets, chartConfig, workout);
         chartData.push(chartElement)
     })
     return (

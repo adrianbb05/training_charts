@@ -1,40 +1,102 @@
 "use client"
 
-import {TrendingUp} from "lucide-react"
 import {CartesianGrid, Line, LineChart, XAxis} from "recharts"
 
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from "../ui/card"
+import {Card, CardContent, CardHeader, CardTitle,} from "../ui/card"
 import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent,} from "../ui/chart"
+import {getWorkouts} from "../../utils/mapper/workoutHelper";
+import {workoutsToMap} from "../../utils/mapper/workoutMapper";
+import {setChartElement} from "../../utils/chartCreationUtils";
+import {Set} from "../../utils/entities/Set"
+import {ExerciseChartType} from "./ExerciseChart";
+import {Exercise} from "../../utils/entities/Exercise";
+import {Workout} from "../../utils/entities/Workout";
 
 
-const chartData = [
-    {month: "January", desktop: 186, mobile: 80},
-    {month: "February", desktop: 305, mobile: 200},
-    {month: "March", desktop: 237, mobile: 120},
-    {month: "April", desktop: 73, mobile: 190},
-    {month: "May", desktop: 209, mobile: 130},
-    {month: "June", desktop: 214, mobile: 140},
-    {month: "June", desktop: 220},
-    {month: "June", desktop: 221},
-]
+interface ExerciseComparisonProps {
+    exercise1: string
+    exercise2: string
+    chartType: ExerciseChartType
+}
 
-const chartConfig = {
-    desktop: {
-        label: "Desktop",
+interface ComparisonExercises {
+    exercise1: number,
+    exercise2?: number
+}
+
+export function ExerciseComparison({exercise1, exercise2, chartType}: ExerciseComparisonProps) {
+    let workouts = getWorkouts();
+    let workoutsExercise1Map: Map<Workout, Exercise> = workoutsToMap(workouts, exercise1);
+    let workoutsExercise2Map: Map<Workout, Exercise> = workoutsToMap(workouts, exercise2);
+
+    let data: Map<number, ComparisonExercises> = new Map()
+
+    let nodeIndex = 0;
+    workoutsExercise1Map.forEach((exercise, workout) => {
+        let sets: Set[] = exercise.sets
+        let chartElement = setChartElement(chartType, sets, chartConfig, workout)
+        data.set(nodeIndex, {
+            exercise1: chartElement.exercise,
+        })
+        nodeIndex++
+    })
+
+    nodeIndex = 0
+    workoutsExercise2Map.forEach((exercise, workout) => {
+        let sets: Set[] = exercise.sets
+        let chartElement = setChartElement(chartType, sets, chartConfig, workout)
+        if (data.has(nodeIndex)) {
+            // @ts-ignore
+            const comparison: ComparisonExercises = data.get(nodeIndex);
+            comparison.exercise2 = chartElement.exercise
+        }
+        nodeIndex++
+    })
+
+    let mappedData = mapDataToChartData(data)
+
+    return <div>
+        <ExerciseComparisonChart chartData={mappedData} title={`Comparison between ${exercise1} and ${exercise2}`}/>
+    </div>
+}
+
+function mapDataToChartData(data: Map<number, ComparisonExercises>) {
+    let mappedData: any[] = []
+    data.forEach((mapData, index) => {
+        mappedData.push({
+            month: index.valueOf(),
+            exercise1: mapData.exercise1,
+            exercise2: mapData.exercise2
+        })
+    })
+    return mappedData
+}
+
+export interface ComparisonChartConfig extends ChartConfig {
+
+}
+
+const chartConfig: ComparisonChartConfig = {
+    exercise1: {
+        label: "kg",
         color: "hsl(var(--chart-1))",
     },
-    mobile: {
-        label: "Mobile",
+    exercise2: {
+        label: "kg",
         color: "hsl(var(--chart-2))",
     },
 } satisfies ChartConfig
 
-export function ExerciseComparisonChart() {
+interface ExerciseComparisonChartProps {
+    chartData: any,
+    title: string
+}
+
+function ExerciseComparisonChart({chartData, title}: ExerciseComparisonChartProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Line Chart - Multiple</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardTitle>{title}</CardTitle>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig}>
@@ -52,38 +114,26 @@ export function ExerciseComparisonChart() {
                             tickLine={false}
                             axisLine={false}
                             tickMargin={8}
-                            tickFormatter={(value) => value.slice(0, 3)}
+                            tickFormatter={(value) => value}
                         />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent/>}/>
                         <Line
-                            dataKey="desktop"
+                            dataKey="exercise1"
                             type="monotone"
-                            stroke="var(--color-desktop)"
+                            stroke="var(--color-exercise1)"
                             strokeWidth={2}
                             dot={false}
                         />
                         <Line
-                            dataKey="mobile"
+                            dataKey="exercise2"
                             type="monotone"
-                            stroke="var(--color-mobile)"
+                            stroke="var(--color-exercise2)"
                             strokeWidth={2}
                             dot={false}
                         />
                     </LineChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter>
-                <div className="flex w-full items-start gap-2 text-sm">
-                    <div className="grid gap-2">
-                        <div className="flex items-center gap-2 font-medium leading-none">
-                            Trending up by 5.2% this month <TrendingUp className="h-4 w-4"/>
-                        </div>
-                        <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                            Showing total visitors for the last 6 months
-                        </div>
-                    </div>
-                </div>
-            </CardFooter>
         </Card>
     )
 }
