@@ -28,7 +28,7 @@ export function ExerciseChart({exerciseToDisplay, chartType}: ExerciseChartProps
     let chartTitle: string = setChartTitleName(chartType)
     workoutExerciseMap.forEach((exercise, workout) => {
         let sets: Set[] = exercise.sets
-        let chartElement: SimpleChartElement = setChartElement(chartType, sets, chartConfig, workout);
+        let chartElement: SimpleChartElement = setChartElement(chartType, sets, chartConfig, workout, false);
         chartData.push(chartElement)
     })
     return (

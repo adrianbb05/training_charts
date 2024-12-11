@@ -11,6 +11,7 @@ import {Set} from "../../utils/entities/Set"
 import {ExerciseChartType} from "./ExerciseChart";
 import {Exercise} from "../../utils/entities/Exercise";
 import {Workout} from "../../utils/entities/Workout";
+import {ComparisonExercises, getBiggestExerciseMap, handleDataCreation} from "../../utils/chart/ComparisionHelper";
 
 
 interface ExerciseComparisonProps {
@@ -19,42 +20,19 @@ interface ExerciseComparisonProps {
     chartType: ExerciseChartType
 }
 
-interface ComparisonExercises {
-    exercise1: number,
-    exercise2?: number
-}
-
 export function ExerciseComparison({exercise1, exercise2, chartType}: ExerciseComparisonProps) {
     let workouts = getWorkouts();
     let workoutsExercise1Map: Map<Workout, Exercise> = workoutsToMap(workouts, exercise1);
     let workoutsExercise2Map: Map<Workout, Exercise> = workoutsToMap(workouts, exercise2);
-
-    let data: Map<number, ComparisonExercises> = new Map()
-
-    let nodeIndex = 0;
-    workoutsExercise1Map.forEach((exercise, workout) => {
-        let sets: Set[] = exercise.sets
-        let chartElement = setChartElement(chartType, sets, chartConfig, workout)
-        data.set(nodeIndex, {
-            exercise1: chartElement.exercise,
-        })
-        nodeIndex++
-    })
-
-    nodeIndex = 0
-    workoutsExercise2Map.forEach((exercise, workout) => {
-        let sets: Set[] = exercise.sets
-        let chartElement = setChartElement(chartType, sets, chartConfig, workout)
-        if (data.has(nodeIndex)) {
-            // @ts-ignore
-            const comparison: ComparisonExercises = data.get(nodeIndex);
-            comparison.exercise2 = chartElement.exercise
-        }
-        nodeIndex++
-    })
+    let biggestExerciseMap: Map<Workout, Exercise> = getBiggestExerciseMap(workoutsExercise1Map, workoutsExercise2Map)
+    let data
+    if (biggestExerciseMap === workoutsExercise1Map) {
+        data = handleDataCreation(workoutsExercise1Map, workoutsExercise2Map, chartType, chartConfig);
+    } else {
+        data = handleDataCreation(workoutsExercise2Map, workoutsExercise1Map, chartType, chartConfig)
+    }
 
     let mappedData = mapDataToChartData(data)
-
     return <div>
         <ExerciseComparisonChart chartData={mappedData} title={`Comparison between ${exercise1} and ${exercise2}`}/>
     </div>

@@ -27,13 +27,28 @@ export function FileUpload({setIsUploaded}: FileUploadProps) {
 
     return (
         <>
-            <h2>File Import</h2>
-            <div>
-                <form onSubmit={handleSubmit}>
-                    <input type="file" onChange={handleFileChange}/>
-                    <button type="submit">Upload</button>
-                </form>
+            <div className="grid place-items-center h-screen">
+                <div className="text-center">
+                    <h1 className="mb-4 text-2xl font-bold">Upload Your File</h1>
+                    <form className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md" onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label htmlFor="file-upload" className="block text-gray-700 text-sm font-bold mb-2">Choose
+                                File:</label>
+                            <input id="file-upload" type="file"
+                                   className="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                                   onChange={handleFileChange}
+                            />
+
+                        </div>
+                        <button type="submit"
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            Submit
+                        </button>
+                    </form>
+                </div>
             </div>
         </>
-    );
+    )
+        ;
 }
