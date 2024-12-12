@@ -1,9 +1,9 @@
 import './index.css';
 import {useState} from "react";
-import {ExercisesNav} from "./components/ExercisesNav";
-import {ExerciseComparisonSelection} from "./components/ExerciseComparisionSelection";
-import {FileUpload} from "./components/FileUpload";
-import {WorkoutRoutes} from "./components/WorkoutRoutes";
+import {ExercisesNav} from "./components/nav/ExercisesNav";
+import {ExerciseComparisonNav} from "./components/nav/ExerciseComparisionSelection";
+import {FileUpload} from "./components/fileUpload/FileUpload";
+import {WorkoutRoutes} from "./components/utils/WorkoutRoutes";
 
 enum ChartToShow {
     EXERCISE,
@@ -23,7 +23,7 @@ export default function App() {
         if (chartToShow === ChartToShow.EXERCISE) {
             return <ExercisesNav/>
         } else if (chartToShow === ChartToShow.EXERCISE_COMPARISON) {
-            return <ExerciseComparisonSelection/>
+            return <ExerciseComparisonNav/>
         }
     }
 

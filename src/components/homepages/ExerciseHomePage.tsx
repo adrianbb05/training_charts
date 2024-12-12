@@ -1,6 +1,6 @@
-import {ExerciseChart, ExerciseChartType} from "./charts/ExerciseChart";
+import {ExerciseChart, ExerciseChartType} from "../charts/ExerciseChart";
 import {useState} from "react";
-import {ExerciseTypeButtons} from "./ExerciceTypeButtons";
+import {ExerciseTypeButtons} from "../utils/ExerciceTypeButtons";
 
 interface ExerciseHomePageProps {
     exercise: string;

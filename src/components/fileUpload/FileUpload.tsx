@@ -1,7 +1,7 @@
 import React, {ChangeEvent, FormEvent, useState} from 'react';
-import {mapCsvToJson} from "../utils/datareader/csv-mapper";
-import {mapDataToWorkout} from "../utils/mapper/workoutMapper";
-import {WorkoutData} from "../utils/entities/WorkoutData";
+import {mapCsvToJson} from "../../utils/datareader/csv-mapper";
+import {mapDataToWorkout} from "../../utils/mapper/workoutMapper";
+import {WorkoutData} from "../../utils/entities/WorkoutData";
 
 interface FileUploadProps {
     setIsUploaded: () => void;

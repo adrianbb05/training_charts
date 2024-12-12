@@ -1,7 +1,7 @@
 import {NavLink, Route} from "react-router";
-import {ExerciseHomePage} from "../components/ExerciseHomePage";
-import {Workout} from "./entities/Workout";
-import {getWorkouts} from "./mapper/workoutHelper";
+import {ExerciseHomePage} from "../homepages/ExerciseHomePage";
+import {Workout} from "../../utils/entities/Workout";
+import {getWorkouts} from "../../utils/mapper/workoutHelper";
 
 export function convertNamesToElements(exerciseNames: string[]) {
     return exerciseNames.map(exercise => {

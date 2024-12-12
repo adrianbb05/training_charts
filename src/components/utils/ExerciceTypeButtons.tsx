@@ -1,5 +1,5 @@
 import {ExerciseTypeButton} from "./ExerciseTypeButton";
-import {ExerciseChartType} from "./charts/ExerciseChart";
+import {ExerciseChartType} from "../charts/ExerciseChart";
 
 interface ExerciseTypeButtonsProps {
     setChartType: React.Dispatch<React.SetStateAction<ExerciseChartType>>;

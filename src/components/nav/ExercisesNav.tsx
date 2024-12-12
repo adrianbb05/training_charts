@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Routes} from "react-router"
 import {useState} from "react";
-import {SearchBar} from "./SearchBar";
+import {SearchBar} from "../utils/SearchBar";
 import {convertNamesToElements, handleExerciseNames} from "../utils/ExerciseUtils";
 
 

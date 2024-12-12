@@ -1,7 +1,7 @@
-import {getWorkouts} from "../utils/mapper/workoutHelper";
+import {getWorkouts} from "../../utils/mapper/workoutHelper";
 import {BrowserRouter as Router, Route, Routes} from "react-router";
-import {Workout} from "../utils/entities/Workout";
-import {WorkoutHomePage} from "./WorkoutHomePage";
+import {Workout} from "../../utils/entities/Workout";
+import {WorkoutHomePage} from "../homepages/WorkoutHomePage";
 
 export function WorkoutRoutes() {
     let workouts: Workout[] = getWorkouts();

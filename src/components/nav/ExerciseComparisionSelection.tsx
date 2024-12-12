@@ -1,11 +1,11 @@
 import {useState} from "react";
 import {handleExerciseNames} from "../utils/ExerciseUtils";
-import {ExerciseComparison} from "./charts/ExerciseComparisonChart";
-import {ExerciseChartType} from "./charts/ExerciseChart";
-import {ExerciseTypeButtons} from "./ExerciceTypeButtons";
-import {SearchBar} from "./SearchBar";
+import {ExerciseComparison} from "../charts/ExerciseComparisonChart";
+import {ExerciseChartType} from "../charts/ExerciseChart";
+import {ExerciseTypeButtons} from "../utils/ExerciceTypeButtons";
+import {SearchBar} from "../utils/SearchBar";
 
-export function ExerciseComparisonSelection() {
+export function ExerciseComparisonNav() {
     const [exercise1, setExercise1] = useState("")
     const [exercise2, setExercise2] = useState("")
     const [chartType, setChartType] = useState(ExerciseChartType.MAX_WEIGHT)
