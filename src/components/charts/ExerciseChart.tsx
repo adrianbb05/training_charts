@@ -6,7 +6,7 @@ import {Exercise} from "../../utils/entities/Exercise";
 import {getWorkouts} from "../../utils/mapper/workoutHelper";
 import {Workout} from "../../utils/entities/Workout";
 import {Set} from "../../utils/entities/Set"
-import {SimpleChartElement, setChartElement, setChartTitleName} from "../../utils/chartCreationUtils";
+import {setChartElement, setChartTitleName, SimpleChartElement} from "../../utils/chartCreationUtils";
 import {workoutsToMap} from "../../utils/mapper/workoutMapper";
 
 export enum ExerciseChartType {
@@ -31,6 +31,7 @@ export function ExerciseChart({exerciseToDisplay, chartType}: ExerciseChartProps
         let chartElement: SimpleChartElement = setChartElement(chartType, sets, chartConfig, workout, false);
         chartData.push(chartElement)
     })
+    console.log(chartData)
     return (
         <Chart chartData={chartData} title={chartTitle}/>
     )
@@ -46,6 +47,10 @@ const chartConfig = {
 interface ChartProps {
     title: string;
     chartData: any[];
+}
+
+function handleDotClick() {
+    console.log("DotClick")
 }
 
 function Chart({title, chartData}: ChartProps) {
@@ -66,7 +71,7 @@ function Chart({title, chartData}: ChartProps) {
                         <CartesianGrid vertical={false} strokeDasharray="3 3"/>
                         <XAxis
                             width={9}
-                            dataKey="workout"
+                            dataKey="workoutDate"
                             tickLine={false}
                             axisLine={false}
                             fontSize={12}
@@ -83,6 +88,7 @@ function Chart({title, chartData}: ChartProps) {
                             stroke="var(--color-exercise)"
                             strokeWidth={3}
                             dot={false}
+                            activeDot={{onClick: handleDotClick}}
                         />
                     </LineChart>
                 </ChartContainer>

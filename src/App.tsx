@@ -3,13 +3,14 @@ import {useState} from "react";
 import {ExercisesNav} from "./components/ExercisesNav";
 import {ExerciseComparisonSelection} from "./components/ExerciseComparisionSelection";
 import {FileUpload} from "./components/FileUpload";
+import {WorkoutRoutes} from "./components/WorkoutRoutes";
 
 enum ChartToShow {
     EXERCISE,
-    EXERCISE_COMPARISION
+    EXERCISE_COMPARISON
 }
 
-function App() {
+export default function App() {
     const [isUploaded, setIsUploaded] = useState(false)
     const [chartToShow, setChartToShow] = useState(ChartToShow.EXERCISE)
 
@@ -21,7 +22,7 @@ function App() {
     let homePageToShow = () => {
         if (chartToShow === ChartToShow.EXERCISE) {
             return <ExercisesNav/>
-        } else if (chartToShow === ChartToShow.EXERCISE_COMPARISION) {
+        } else if (chartToShow === ChartToShow.EXERCISE_COMPARISON) {
             return <ExerciseComparisonSelection/>
         }
     }
@@ -32,20 +33,19 @@ function App() {
                 <div onClick={() => setChartToShow(ChartToShow.EXERCISE)}>
                     Exercises
                 </div>
-                <div onClick={() => setChartToShow(ChartToShow.EXERCISE_COMPARISION)}>
+                <div onClick={() => setChartToShow(ChartToShow.EXERCISE_COMPARISON)}>
                     Exercise Comparison
                 </div>
             </div>
             {homePageToShow()}
+            <WorkoutRoutes/>
         </>
     } else {
         return (
             <>
                 <FileUpload setIsUploaded={handleSetIsUploaded}/>
             </>
-        )
-            ;
+        );
     }
 }
 
-export default App;
